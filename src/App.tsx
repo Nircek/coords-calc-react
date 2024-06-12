@@ -4,6 +4,7 @@ import {
   CoordsFormat,
   DecimalDegrees,
   DegreesMinutesSeconds,
+  EPSG2178,
   EPSG2180,
   FullDecimalDegrees,
   Maidenhead,
@@ -97,6 +98,11 @@ function App() {
       placeholder: "244796.31, 565346.98",
       title: "PL-1992 (EPSG:2180)",
       handler: EPSG2180,
+    },
+    {
+      placeholder: "5548419.17, 7422207.41",
+      title: "PL-2000 VII (EPSG:2178)",
+      handler: EPSG2178,
     },
   ].map((e) => ({ ...e, provider, coords, setProvider, setCoords }));
   return (

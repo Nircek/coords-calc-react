@@ -6,6 +6,12 @@ proj4.defs(
   "+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs",
 );
 
+// src: https://epsg.io/2178
+proj4.defs(
+  "EPSG:2178",
+  "+proj=tmerc +lat_0=0 +lon_0=21 +k=0.999923 +x_0=7500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs"
+);
+
 export interface CoordsFormat {
   regex: RegExp;
   tidy(str: string): string;
@@ -185,6 +191,28 @@ export class EPSG2180 {
 
   static generate(lat: number, long: number) {
     const [y, x] = proj4("EPSG:2180").forward([long, lat]);
+    return `${x.toFixed(2)}, ${y.toFixed(2)}`;
+  }
+}
+
+export class EPSG2178 {
+  static regex = /^(\d{7}(?:\.\d+)), (\d{7}(?:\.\d+))$/;
+
+  static tidy(str: string) {
+    return str
+      .replace(/,/g, ", ")
+      .replace(/\s{2,}/g, " ")
+      .replace(/[^-+0-9,. ]/g, "");
+  }
+
+  static convert(str: string): [number, number] {
+    const [_, x, y] = str.match(EPSG2178.regex)!;
+    const [long, lat] = proj4("EPSG:2178").inverse([+y, +x]);
+    return [lat, long];
+  }
+
+  static generate(lat: number, long: number) {
+    const [y, x] = proj4("EPSG:2178").forward([long, lat]);
     return `${x.toFixed(2)}, ${y.toFixed(2)}`;
   }
 }
