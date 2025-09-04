@@ -55,12 +55,25 @@ function CoordsInput({
     forceUpdate();
     if (nValid) setCoords(handler.convert(nValue));
   };
+
+  const blurListener = (ev: SyntheticEvent) => {
+    const target = ev.target as HTMLInputElement;
+    const nValue = handler.tidy(target.value);
+    const nValid = handler.regex.test(nValue);
+    if (nValid) {
+      const coordinates = handler.convert(nValue);
+      value.current = handler.generate(...coordinates);
+      forceUpdate();
+    }
+  };
+
   const obj = {
     id: gray ? "gray" : undefined,
     className: valid.current ? "" : "invalid",
     placeholder,
     title,
     onChange: listener,
+    onBlur: blurListener,
     value: value.current,
   };
   return <input type="text" {...obj} />;
